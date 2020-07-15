@@ -29,15 +29,6 @@ def verify_id(base_url, headers, intra_id):
 	except requests.exceptions.HTTPError:
 		print('Sorry, unavailable id. Try again.')
 		quit()
-
-
-
-
-
-
-
-
-
-
-
-
+	except requests.exceptions.RequestException:
+		#catastrophic error
+		quit()

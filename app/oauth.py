@@ -3,8 +3,8 @@ import json
 
 def generate_token(base_url):
 	headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-	client_id = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-	client_secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+	client_id = '64c120e70b3e851e4e2c7b047755ed785bd23d01e77e29fb7a52b51ba6df3ccb'
+	client_secret = '7097f8d16c9f0eee2515dc8c9abf6b7112a306e9573966d4f55d130d2fe770ab'
 	data = {'grant_type': 'client_credentials', 'client_id': f'{client_id}', 'client_secret': f'{client_secret}'}
 	r = requests.post(f"{base_url}/oauth/token", headers=headers, data=data)
 	token = json.loads(r.text)
@@ -19,6 +19,8 @@ def get_token(base_url):
 			token = json.load(token)
 	except json.decoder.JSONDecodeError as errjson:
 		pass
+	except FileNotFoundError:
+		token = generate_token(base_url)
 
 	headers = {'Authorization': f'Bearer {token}'}
 	try:
