@@ -20,24 +20,14 @@ def get_endpoints(allinfo):
 			'titles', 'titles_users',
 		]
 	else:
-		return [
-			'', 'locations', 'apps', 'exams'
-		]
+		return ['', 'locations', 'apps', 'exams']
 
-def id_exists(base_url, intra_id, headers):
+def verify_id(base_url, headers, intra_id):
 	try:
-		s = requests.get(f"{base_url}/v2/users/{intra_id}", headers=headers)
+		s = requests.get(f"{base_url}/v2/users/{intra_id}/titles", headers=headers)
 		s.raise_for_status()
 	except requests.exceptions.HTTPError:
-		if s.status_code == 404:
-			print('Unavailable id')
-		elif s.status_code == 401:
-			print('Expired token')
-		quit()
-
-def photo_arg(intra_id, photo):
-	if photo:
-		print(f'https://cdn.intra.42.fr/users/{intra_id}.jpg')
+		print('Sorry, unavailable id. Try again.')
 		quit()
 
 
