@@ -62,7 +62,7 @@ def format_info(id_info, intra_id):
 		['Wallet', f'₳ {id_info[0]["wallet"]}'],
 		['Correction Points', id_info[0]["correction_point"]],
 		['Is Staff?', staff],
-		['Last Cursus', id_info[0]["cursus_users"][len(id_info[0]["cursus_users"]) - 1]["cursus"]["name"]],
+		['Last Cursus', 'None' if not id_info[0]["cursus_users"] else id_info[0]["cursus_users"][len(id_info[0]["cursus_users"]) - 1]["cursus"]["name"]],
 		['Finished projects', finished],
 		['In progress projects', 'None' if not inprogress else ", ".join(inprogress)],
 		['Amount Achievements', len(id_info[0]["achievements"])],
