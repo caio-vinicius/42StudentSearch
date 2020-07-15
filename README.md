@@ -1,47 +1,76 @@
-# Coding Challenge Vaga Part-time 42 São Paulo
+# 42 Search Student
 
-Sua tarefa é construir uma Aplicação CLI para busca de alunos utilizando a api da 42. A aplicação deverá receber um intra id e retornar o máximo de informações possíveis sobre aquele determinado aluno.
+![42 Search Student](https://github.com/42sp/part-time-selection-process-caio-vinicius/blob/media/big.png)
 
-A aplicação pode ser construída utilizando qualquer linguagem, frameworks, libraries e ferramentas de sua preferência. Apesar disso, a stack mais comum na 42 São Paulo é **Golang,** seguida por **Python**.
+42 Search Student is a user command interface that helps you search for information from 42 Network students
 
-## O que será avaliado
+  - have the student id
+  - hit enter
+  - voilà!
+  
+## Installation
 
-Queremos avaliar sua capacidade de desenvolver e documentar um back-end para uma aplicação. Serão avaliados:
+42 Search Student requires [Python](https://www.python.org/) v3.6+ to run properly
 
-- Código bem escrito e limpo;
-- Quais ferramentas foram usadas, como e por quê;
-- Sua criatividade e capacidade de lidar com problemas diferentes;
-- Sua capacidade de se comprometer com o que foi fornecido;
-- Sua capacidade de documentação da sua aplicação.
+### Linux, MacOS X
 
-## O mínimo necessário
+Install the dependencies required with.
 
-- Uma aplicação contendo uma aplicação CLI simples, que atenda os requisitos descritos abaixo, fazendo requisições à api da intra 42;
-- README.md contendo informações básicas do projeto e como executá-lo;
+```sh
+$ pwd
+$ ~/student-search
+$ ./scripts/install_requirements.sh
+```
 
-## Bônus
+### Docker
 
-Os seguintes itens não são obrigatórios, mas darão mais valor ao seu trabalho (os em negrito são mais significativos para nós)
+```sh
+$ pwd
+$ ~/student-search
+$ ./scripts/docker_start.sh
+```
+## Usage
 
-- Uso de ferramentas externas que facilitem o seu trabalho;
-- Cuidados especiais com otimização, padrões, entre outros;
-- **Testes**;
-- **Conteinerização da aplicação**;
-- Sugestões sobre o challenge embasadas em alguma argumentação.
+To run the script and see the user information you have to
 
-# Requisitos
+```sh
+$ cd app
+$ ./student_search foobar
+```
+So probably you will see the output on your terminal
 
-## 0: A aplicação deverá ser invocada da seguinte forma:
-`./student-search "intra_id do aluno a ser buscado"`
+![example_output_42searchstudent](https://github.com/42sp/part-time-selection-process-caio-vinicius/blob/media/output.png)
 
-## Critérios de Aceitação
+The first time that you run with a specific id the script will store cache about the request, so next time you run will be much more faster.
+If you don't want cache, you can use
 
-- Você deverá utilizar a api oficial da intra: https://api.intra.42.fr/
-- A Aplicação deve ser real e escrita por você;
-- Todos os requisitos acima devem ser cumpridos;
-- Deve haver uma documentação descrevendo sua Aplicação;
-- Se você julgar necessário, adequado ou quiser deixar a aplicação mais completa (bônus!) você pode adicionar outras chamadas, flags, filtros, etc.
+```sh
+$ ./student_search --no-cache foobar
+```
 
-## Formato de entrega
+So the processing will take a bit longer than previous get from cache, but worth it! 
+You can clear cache without output information:
 
-Seu código deverá ser submetido neste repositório, sinta-se livre pare substituir este README.md com o seu próprio.
+```sh
+$ ./student_search --clean-cache foobar
+```
+
+If you want a bunch of unformatted information of a user you can
+
+```sh
+$ ./student_search --all foobar
+```
+
+If you want more options, you can try
+
+| Argument | Role  |
+| ------ | ------ |
+| --help, -h | show this help message and exit |
+| --clean-cache | delete local cache files |
+| --no-cache, -n | do not use cache, redo the request |
+| --raw, -r | show information in raw, without a table |
+| --photo, -p | show intra url image and exit |
+| --all | output all data to stdout in json |
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
