@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+#my functions
+import utils
+import parseargs
+
 import json
 import requests
 import sys
@@ -15,13 +19,7 @@ import pydoc
 
 #validation args
 parser = argparse.ArgumentParser(description='Search for 42 student information.')
-parser.add_argument('id', action='store', help='id of student')
-parser.add_argument('--raw', '-r',  action='store_true', default=False,dest='raw', help='show information without a table')
-parser.add_argument('--no-cache', '-n', action='store_true', default=False,dest='nocache', help='dont use cache, reperform request')
-parser.add_argument('--clean-cache',  action='store_true', default=False,dest='cleancache', help='delete cache files')
-parser.add_argument('--all', action='store_true', default=False, dest='all', help='show all possible coherent information')
-parser.add_argument('--photo', '-p', action='store_true', default=False, dest='photo', help='show intra url image and exit')
-args = parser.parse_args()
+args = parseargs.parse_args(parser)
 
 nocache = args.nocache
 cleancache = args.cleancache
@@ -32,38 +30,17 @@ allinfo = args.all
 
 #setup some api information
 base_url = 'https://api.intra.42.fr'
-authorization = 'Bearer xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+authorization = 'Bearer c816269e14f7893f6785b3f740fd7c619962480a4cf7a2befbc45b311b495ecd'
 headers = {'Authorization': authorization}
 
 #id exists?
-try:
-	s = requests.get(f"{base_url}/v2/users/{intra_id}", headers=headers)
-	s.raise_for_status()
-	if photo:
-		print(json.loads(s.text)["image_url"])
-		quit()
-except requests.exceptions.HTTPError:
-	if s.status_code == 404:
-		print('Unavailable id')
-	elif s.status_code == 401:
-		print('Expired token')
-	quit()
+utils.id_exists(base_url, intra_id, headers)
+#photo arg
+utils.photo_arg(intra_id, photo)
 
 sample_url = '{}/v2/users/{}'.format(base_url, intra_id)
 
-endpoints = []
-if not allinfo:
-	endpoints = [
-		'', 'locations', 'apps', 'exams'
-	]
-else:
-
-	endpoints = [
-			'apps', 'events', 'events_users',
-			'exams', 'coalitions', 'coalitions_users',
-			'cursus_users', 'campus_users', 'expertises_users',
-			'groups', 'groups_users', 'languages_users'
-	]
+endpoints = utils.get_endpoints(allinfo)
 
 formatedEndpoints = []
 
@@ -73,33 +50,28 @@ for endpoint in endpoints:
 #requistions happening here
 id_info = []
 
-def removeFile(file_name):
-	try:
-		os.remove(file_name)
-		print("Cache clean sucessfully!")
-	except OSError:
-		pass
-
 if cleancache:
-	removeFile(f'.student-{intra_id}')
+	utils.remove_archive(f'.student-{intra_id}')
+	utils.remove_archive(f'.student-all-{intra_id}')
+	print("Cache clean sucessfully!")
 	quit()
-#if allinfo:
-#	removeFile(f'.student-{intra_id}')
 
 try:
 	if not nocache:
 		with open(f'.student-{intra_id}', 'rb') as f:
+			print("Getting information from cache...")
 			id_info = pickle.load(f)
 	else:
 		raise ValueError('--no-cache is true')
 except (EnvironmentError, ValueError):
+	print("Getting information from server...")
 	for i, endpoint in enumerate(formatedEndpoints):
 		try:
 			s = requests.get(endpoint, headers=headers)
 			s.raise_for_status()
 		except requests.exceptions.HTTPError as errc:
 			print(errc)
-		print("ENDPOINT:", endpoint)
+		#print("ENDPOINT:", endpoint)
 		if s.status_code == 200:
 			r = json.loads(s.text)
 			id_info.append(r)
@@ -107,7 +79,9 @@ except (EnvironmentError, ValueError):
 			id_info.append({})
 		time.sleep(0.5)
 	date_requisition = datetime.now()
-	with open(f".student-{intra_id}", 'wb') as f:
+	file_name = f'.student-{intra_id}' if not allinfo else f'.student-all-{intra_id}'
+	print(file_name)
+	with open(file_name, 'wb') as f:
 		pickle.dump(id_info, f)
 
 #all or table info?
@@ -187,7 +161,8 @@ if not allinfo:
 			print(": ".join(map(str, info)))
 	else:
 		table = AsciiTable(table_data, intra_id)
-		pydoc.pager(table.table)
-	#print(table.table)
+		print(table.table)
+		#pydoc.pager(table.table)
 else:
-	print(json.dumps(id_info[1][0], indent=4, sort_keys=True))
+	print(id_info)
+
