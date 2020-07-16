@@ -9,8 +9,8 @@ import student_search
 import argparse
 
 parser = argparse.ArgumentParser(description='Unit Test for 42 Student Search')
-parser.add_argument('list', default='1', nargs='?', action='store', help='choose between 0, 1 and 2 to random intra_id lists (default: 1)')
-parser.add_argument('ids', nargs='*', action='store', help='id\'s to test (if empty will run "random" tests)')
+parser.add_argument('list', default='1', nargs='?', action='store', help='0, 1 and 2 to random intra_id list')
+parser.add_argument('id', nargs='*', action='store', help='id\'s to test')
 args = parser.parse_args()
 
 param_args = {'id': '', 'ccache': False, 'ncache': False, 'raw': False, 'photo': False, 'all': False}
@@ -21,8 +21,8 @@ if args.list:
 	lists.append('?sort=login')
 	lists.append('?sort=last_name')
 
-if args.ids:
-	for user in args.ids:
+if args.id:
+	for user in args.id:
 		param_args['id'] = user
 		student_search.main(param_args)
 else:
