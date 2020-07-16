@@ -24,7 +24,7 @@ def get_token(base_url):
 
 	headers = {'Authorization': f'Bearer {token}'}
 	try:
-		s = requests.get(f"{base_url}/v2/titles", headers=headers)
+		s = requests.get(f'{base_url}/v2/titles', headers=headers)
 		s.raise_for_status()
 	except requests.exceptions.HTTPError:
 		token = generate_token(base_url)

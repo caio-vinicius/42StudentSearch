@@ -25,7 +25,7 @@ def do_request(base_url, intra_id, nocache, allinfo, headers):
 		else:
 			raise ValueError('--no-cache is true')
 	except (EnvironmentError, ValueError):
-		print("Getting information from server...")
+		print('Getting information from server...')
 		for i, endpoint in enumerate(formated_endpoints):
 			try:
 				s = requests.get(endpoint, headers=headers)
