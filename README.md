@@ -13,7 +13,7 @@
 42 Student Search requires [Python](https://www.python.org/) v3.6+ and [Pip](https://pip.pypa.io/en/stable/) v9.0.1+ to run properly
 
 ```sh
-$ git clone https://github.com/42sp/part-time-selection-process-caio-vinicius student-search
+$ git clone https://github.com/caio-vinicius/42StudentSearch student-search
 $ cd student-search
 ```
 
